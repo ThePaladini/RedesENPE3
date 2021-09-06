@@ -2,21 +2,118 @@
 import asyncio
 from tcp import Servidor
 import re
-
+lista_nick = {}
+lista_escrita = {}
+lista_canal = {}
+lista_escrita_canal = {}
+quebra = b''
 
 def validar_nome(nome):
     return re.match(br'^[a-zA-Z][a-zA-Z0-9_-]*$', nome) is not None
 
-
+def busca(nick):
+    global lista_nick
+    for conect, nick2 in lista_nick.items():
+    	if nick==nick2:
+    		return conect
 def sair(conexao):
     print(conexao, 'conexão fechada')
     conexao.fechar()
 
 
 def dados_recebidos(conexao, dados):
+    global lista_nick
+    global lista_escrita
+    global quebra
+    global lista_canal
+    global lista_escrita_canal
+    dados = quebra + dados
     if dados == b'':
         return sair(conexao)
-    print(conexao, dados)
+    dados_real = dados.split(b'\n')
+    tamanho_real=len(dados_real)
+    if dados.endswith(b'\n'):
+    	quebra = b''
+    else:
+    	quebra = dados_real[tamanho_real-1]
+    		
+    for j in range(len(dados_real)-1):
+	    if dados_real[j] == b'':
+	    	return sair(conexao)	    	
+	    dados_real[j] = dados_real[j] + b'\n'	         
+	    if dados_real[j].startswith(b'PING'):
+	    	conexao.enviar(b':server PONG server :' + dados_real[j].split(b' ', 1)[1])
+	    if dados_real[j].startswith(b'NICK'):
+	    	nick_temp=dados_real[j].split(b' ', 1)[1]
+	    	nick_temp = nick_temp.split(b'\r')[0]
+	    	if validar_nome(nick_temp):
+	    		if conexao in lista_nick.keys():	    		
+	    			if nick_temp.lower() in lista_nick.values():
+	    				conexao.enviar(b':server 433 %s %s :Nickname is already in use\r\n'%(lista_nick[conexao],nick_temp))
+			    	else:
+			    		conexao.enviar(b':%s NICK %s\r\n' %(lista_nick[conexao],nick_temp))
+	    				lista_nick[conexao]=nick_temp.lower()
+			    		lista_escrita[conexao]=nick_temp
+	    		else:
+	    			if nick_temp.lower() in lista_nick.values():
+	    				conexao.enviar(b':server 433 * %s :Nickname is already in use\r\n'%nick_temp)
+	    			else:
+	    				lista_nick[conexao]=nick_temp.lower()
+			    		lista_escrita[conexao]=nick_temp
+			    		conexao.enviar(b':server 001 %s :Welcome\r\n' %nick_temp)
+			    		conexao.enviar(b':server 422 %s :MOTD File is missing\r\n' %nick_temp)
+	    	else:
+	    		conexao.enviar(b':server 432 * %s :Erroneous nickname\r\n' %nick_temp)										    		
+	    			 	
+			    		
+	    if dados_real[j].startswith(b'PRIVMSG'):
+	    	dest=dados_real[j].split(b' ')[1].lower()
+	    	cont=dados_real[j].split(b' :')[1]
+	    	if dest in lista_nick.values():
+	    		conect=busca(dest.lower())
+	    		conect.enviar(b':%s PRIVMSG %s :%s'%(lista_escrita[conexao],dest,cont))
+	    	if dest.startswith(b'#'):
+	    		dest=dados_real[j].split(b' #')[1]
+	    		dest=dest.split(b' :',1)[0]
+	    		dest=dest.lower()
+	    		for i in range(len(lista_canal[dest])):
+	    			conect=busca(lista_canal[dest][i].lower())
+	    			if conect!=conexao:
+	    				conect.enviar(b':%s PRIVMSG #%s :%s'%(lista_escrita[conexao],dest,cont))				
+	    		
+
+	    if dados_real[j].startswith(b'JOIN'):
+	    	canal_temp = dados_real[j].split(b' #',1)[1]
+	    	canal_temp = canal_temp.split(b'\r')[0]
+	    	canal_temp = canal_temp.lower()
+	    	if validar_nome(canal_temp):
+	    		if canal_temp in lista_canal.keys():
+	    			lista_canal[canal_temp].append(lista_nick[conexao])
+	    		else:
+	    			lista_canal[canal_temp] = [lista_nick[conexao]]
+			    		
+	    		conexao.enviar(b':%s JOIN :#%s\r\n'%(lista_escrita[conexao],canal_temp))
+
+	    	else:
+	    		conexao.enviar(b':server 403 %s :No such channel\r\n' %canal_temp)				
+	  							
+	  	
+
+	    if dados_real[j].startswith(b'PART'):
+	    	canal_sair=dados_real[j].split(b' ',2)[1]
+	    	canal_sair=canal_sair.split(b'\r')[0]
+	    	canal_sair=canal_sair.split(b'#')[1]
+	    	canal_sair=canal_sair.lower()
+	    	for i in range(len(lista_canal[canal_sair])):
+	    		conect=busca(lista_canal[canal_sair][i].lower())
+	    		conect.enviar(b':%s PART #%s\r\n'%(lista_nick[conexao],canal_sair))
+	    	lista_canal[canal_sair].remove(lista_nick[conexao])
+	    	
+	    	
+
+
+
+	    print(conexao, dados)
 
 
 def conexao_aceita(conexao):
