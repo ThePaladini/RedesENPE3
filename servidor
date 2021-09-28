@@ -125,7 +125,7 @@ def dados_recebidos(conexao, dados):
 	    	if validar_nome(canal_temp):
 	    		if canal_temp in lista_canal.keys():
 	    			lista_canal[canal_temp].append(lista_escrita[conexao])
-    	    		else:
+	    		else:
 	    			lista_canal[canal_temp] = [lista_escrita[conexao]]
 	    		for i in range(len(dici_canais[canal])):
 	    			conect = busca((lista_canal[canal_temp][i]).lower())
