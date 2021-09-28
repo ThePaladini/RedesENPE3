@@ -11,16 +11,16 @@ quebra = b''
 def validar_nome(nome):
     return re.match(br'^[a-zA-Z][a-zA-Z0-9_-]*$', nome) is not None
 def entrada_canal(canal, nome):
-	global lista_nick
-	global lista_escrita
-	global lista_canal
-	if canal in lista_canal.keys():
-		lista_canal[canal].append(nome)
-	else:
-		lista_canal[canal] = [nome]
-	for i in range(len(lista_canal[canal])):
-		conexao = busca((lista_canal[canal][i]).lower())	
-		conexao.enviar(b':%s JOIN :#%s\r\n'%(nome,canal))
+    global lista_nick
+    global lista_escrita
+    global lista_canal
+    if canal in lista_canal.keys():
+    	lista_canal[canal].append(nome)
+    else:
+    	lista_canal[canal] = [nome]
+    for i in range(len(lista_canal[canal])):
+    	conexao = busca((lista_canal[canal][i]).lower())	
+    	conexao.enviar(b':%s JOIN :#%s\r\n'%(nome,canal))
 def busca(nick):
     global lista_nick
     for conect, nick2 in lista_nick.items():
