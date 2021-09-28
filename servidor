@@ -100,7 +100,7 @@ def dados_recebidos(conexao, dados):
 	    		entrada_canal(canal_temp, lista_nick[conexao])
 	    		nome_c = b'#'+ canal_temp
 	    		msg2 = b':server 353 ' + lista_escrita[conexao] + b' = ' + nome_c + b' :'
-			lista_nick2 = []
+	    		lista_nick2 = []
 	    		for i in lista_escrita:
 	    			lista_nick2.append(lista_escrita[i])
 	    		lista_nick2.sort()
