@@ -27,6 +27,18 @@ def busca(nick):
     	if nick==nick2:
     		return conect
 def sair(conexao):
+    global lista_canal
+    global lista_nick
+    global lista_escrita	
+    nick = lista_nick[conexao]
+    lista_nick.pop(conexao)
+    lista_escrita.pop(conexao)
+    for canal in lista_canal.keys():
+        if nick in lista_canal[canal]:
+            lista_canal[canal].remove(nick)
+            for i in range(len(lista_canal[canal])):
+                conexao2 = busca(lista_canal[canal][i].lower())
+                conexao2.enviar(b':%s QUIT :Connection closed\r\n' %nick)		
     print(conexao, 'conexão fechada')
     conexao.fechar()
 
