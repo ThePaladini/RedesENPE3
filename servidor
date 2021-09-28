@@ -28,7 +28,6 @@ def busca(nick):
     		return conect
 def sair(conexao):
     global lista_canal
-    global lista_nick
     global lista_escrita	
     nick = lista_nick[conexao]
     lista_nick.pop(conexao)
