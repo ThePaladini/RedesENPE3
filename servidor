@@ -105,7 +105,7 @@ def dados_recebidos(conexao, dados):
 	    			lista_nick2.append(lista_escrita[i])
 	    		lista_nick2.sort()
 	    		for j in lista_nick2:
-	    			if len(msg + j + b'\r\n') <= 512:
+	    			if len(msg2 + j + b'\r\n') <= 512:
 	    				msg2 = msg2 + j + b' '
 	    			else:
 	    				msg2 = msg2 + b'\r\n'
