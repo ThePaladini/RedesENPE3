@@ -10,7 +10,17 @@ quebra = b''
 
 def validar_nome(nome):
     return re.match(br'^[a-zA-Z][a-zA-Z0-9_-]*$', nome) is not None
-
+def entrada_canal(canal, nome):
+	global lista_nick
+	global lista_escrita
+	global lista_canal
+	if canal in lista_canal.keys():
+		lista_canal[canal].append(nome)	    		    		    	
+	else:
+		lista_canal[canal] = [nome]
+	for i in range(len(lista_canal[canal])):
+	 	conexao = busca((lista_canal[canal][i]).lower())	
+	    	conexao.enviar(b':%s JOIN :#%s\r\n'%(nome,canal))
 def busca(nick):
     global lista_nick
     for conect, nick2 in lista_nick.items():
@@ -87,13 +97,7 @@ def dados_recebidos(conexao, dados):
 	    	canal_temp = canal_temp.split(b'\r')[0]
 	    	canal_temp = canal_temp.lower()
 	    	if validar_nome(canal_temp):
-	    		if canal_temp in lista_canal.keys():
-	    			lista_canal[canal_temp].append(lista_nick[conexao])	    		    		    	
-	    		else:
-	    			lista_canal[canal_temp] = [lista_nick[conexao]]
-	    		for i in range(len(lista_canal[canal_temp])):
-	    			conexao3 = busca((lista_canal[canal_temp][i]).lower())	
-	    			conexao3.enviar(b':%s JOIN :#%s\r\n'%(lista_escrita[conexao],canal_temp))
+	    		entrada_canal(canal_temp, lista_nick[conexao])
 	    		conexao.enviar(b':server 353 %s = #%s :%s\n' %(lista_canal[conexao], canal_temp, b' '.join(sorted(lista_canal[canal_temp]))))
 	    		conexao.enviar(b':server 366 %s #%s :End of /NAMES list.\r\n' % (lista_canal[conexao], canal_temp))
 	    	else:
