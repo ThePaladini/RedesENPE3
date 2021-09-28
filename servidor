@@ -87,17 +87,17 @@ def dados_recebidos(conexao, dados):
 	    	canal_temp = canal_temp.split(b'\r')[0]
 	    	canal_temp = canal_temp.lower()
 	    	if validar_nome(canal_temp):
-	    		if canal_temp in lista_canal.keys():
+				if canal_temp in lista_canal.keys():
 	    			lista_canal[canal_temp].append(lista_nick[conexao])
-	    		else:
+				else:
 	    			lista_canal[canal_temp] = [lista_nick[conexao]]
 	    		for i in range(len(lista_canal[canal_temp])):
 	    			conexao3 = busca((lista_canal[canal_temp][i]).lower())	
 			    	conexao3.enviar(b':%s JOIN :#%s\r\n'%(lista_escrita[conexao],canal_temp))
-                        conexao.enviar(b':server 353 %s = #%s :%s\n'%(lista_canal[conexao], canal_temp, b' '.join(sorted(lista_canal[canal_temp]))))
-                        conexao.enviar(b':server 366 %s #%s :End of /NAMES list.\r\n'%(lista_canal[conexao], canal_temp))
-	    	else:
-	    		conexao.enviar(b':server 403 %s :No such channel\r\n' %canal_temp)				
+				conexao.enviar(b':server 353 %s = #%s :%s\n' %(lista_canal[conexao], canal_temp, b' '.join(sorted(lista_canal[canal_temp]))))
+				conexao.enviar(b':server 366 %s #%s :End of /NAMES list.\r\n' % (lista_canal[conexao], canal_temp))
+			else:
+				conexao.enviar(b':server 403 %s :No such channel\r\n' %canal_temp)				
 	  							
 	  	
 
