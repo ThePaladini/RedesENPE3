@@ -90,7 +90,7 @@ def dados_recebidos(conexao, dados):
 	    			conect=busca(lista_canal[dest][i].lower())
 	    			if conect!=conexao:
 	    				conect.enviar(b':%s PRIVMSG #%s :%s'%(lista_escrita[conexao],dest,cont))				
-	     if dados_real[j].startswith(b'PART'):
+	    if dados_real[j].startswith(b'PART'):
 	    	canal_sair=dados_real[j].split(b' ',2)[1]
 	    	canal_sair=canal_sair.split(b'\r')[0]
 	    	canal_sair=canal_sair.split(b'#')[1]
@@ -101,7 +101,7 @@ def dados_recebidos(conexao, dados):
 	    	lista_canal[canal_sair].remove(lista_nick[conexao])		
 
 
-	     if dados_real[j].startswith(b'JOIN'):
+	    if dados_real[j].startswith(b'JOIN'):
 	    	canal_temp = dados_real[j].split(b' #',1)[1]
 	    	canal_temp = canal_temp.split(b'\r')[0]
 	    	canal_temp = canal_temp.lower()
