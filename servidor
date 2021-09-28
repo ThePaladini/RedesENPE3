@@ -91,9 +91,11 @@ def dados_recebidos(conexao, dados):
 	    			lista_canal[canal_temp].append(lista_nick[conexao])
 	    		else:
 	    			lista_canal[canal_temp] = [lista_nick[conexao]]
-			    		
-	    		conexao.enviar(b':%s JOIN :#%s\r\n'%(lista_escrita[conexao],canal_temp))
-
+	    		for i in range(len(lista_canal[canal_temp])):
+	    			conexao3 = busca((lista_canal[canal_temp][i]).lower())	
+			    	conexao3.enviar(b':%s JOIN :#%s\r\n'%(lista_escrita[conexao],canal_temp))
+                conexao.enviar(b':server 353 %s = #%s :%s\n' %(lista_canal[conexao], canal_temp, b' '.join(sorted(lista_canal[canal_temp]))))
+                conexao.enviar(b':server 366 %s #%s :End of /NAMES list.\r\n' % (lista_canal[conexao], canal_temp))
 	    	else:
 	    		conexao.enviar(b':server 403 %s :No such channel\r\n' %canal_temp)				
 	  							
@@ -106,7 +108,7 @@ def dados_recebidos(conexao, dados):
 	    	canal_sair=canal_sair.lower()
 	    	for i in range(len(lista_canal[canal_sair])):
 	    		conect=busca(lista_canal[canal_sair][i].lower())
-	    		conect.enviar(b':%s PART #%s\r\n'%(lista_nick[conexao],canal_sair))
+	    		conect.enviar(b':%s PART #%s\r\n' %(lista_nick[conexao],canal_sair))
 	    	lista_canal[canal_sair].remove(lista_nick[conexao])
 	    	
 	    	
