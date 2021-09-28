@@ -132,8 +132,7 @@ def dados_recebidos(conexao, dados):
 	    	
 
 
-
-	    print(conexao, dados)
+    print(conexao, dados)
 
 
 def conexao_aceita(conexao):
