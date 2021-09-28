@@ -113,7 +113,7 @@ def dados_recebidos(conexao, dados):
 	    				msg2 = b':server 353 ' + lista_nick[conexao] + b' = ' + nome_c + b' :' + j + b' '
 	    		msg2 = msg2 + b'\r\n'
 	    		conexao.enviar(msg2)
-	    		conexao.enviar(b':server 366 %s #%s :End of /NAMES list.\r\n' % (lista_canal[conexao], canal_temp))
+	    		conexao.enviar(b':server 366 ' + lista_nick[conexao] + b' ' + nome_c + b' :End of /NAMES list.\r\n')
 	    	else:
 	    		conexao.enviar(b':server 403 %s :No such channel\r\n' %canal_temp)				
 	  							
