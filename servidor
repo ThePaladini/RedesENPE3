@@ -87,8 +87,8 @@ def dados_recebidos(conexao, dados):
 	    	canal_temp = canal_temp.split(b'\r')[0]
 	    	canal_temp = canal_temp.lower()
 	    	if validar_nome(canal_temp):
-			if canal_temp in lista_canal.keys():
-				lista_canal[canal_temp].append(lista_nick[conexao])
+	    		if canal_temp in lista_canal.keys():
+	    			lista_canal[canal_temp].append(lista_nick[conexao])	    		    		    	
 			else:
 				lista_canal[canal_temp] = [lista_nick[conexao]]
 			for i in range(len(lista_canal[canal_temp])):
