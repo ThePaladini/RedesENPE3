@@ -98,21 +98,21 @@ def dados_recebidos(conexao, dados):
 	    	canal_temp = canal_temp.lower()
 	    	if validar_nome(canal_temp):
 	    		entrada_canal(canal_temp, lista_nick[conexao])
-			nome_c = b'#'+ canal_temp
-			msg2 = b':server 353 ' + lista_escrita[conexao] + b' = ' + nome_c + b' :'
+	    		nome_c = b'#'+ canal_temp
+	    		msg2 = b':server 353 ' + lista_escrita[conexao] + b' = ' + nome_c + b' :'
 			lista_nick2 = []
-			for i in lista_escrita:
-				lista_nick2.append(lista_escrita[i])
-			lista_nick2.sort()
-			for j in lista_nick2:
-				if len(msg + j + b'\r\n') <= 512:
-					msg2 = msg2 + j + b' '
-				else:
-					msg2 = msg2 + b'\r\n'
-					conexao.enviar(msg2)
-					msg2 = b':server 353 ' + lista_nick[conexao] + b' = ' + nome_c + b' :' + j + b' '
-			msg2 = msg2 + b'\r\n'
-			conexao.enviar(msg2)
+	    		for i in lista_escrita:
+	    			lista_nick2.append(lista_escrita[i])
+	    		lista_nick2.sort()
+	    		for j in lista_nick2:
+	    			if len(msg + j + b'\r\n') <= 512:
+	    				msg2 = msg2 + j + b' '
+	    			else:
+	    				msg2 = msg2 + b'\r\n'
+	    				conexao.enviar(msg2)
+	    				msg2 = b':server 353 ' + lista_nick[conexao] + b' = ' + nome_c + b' :' + j + b' '
+	    		msg2 = msg2 + b'\r\n'
+	    		conexao.enviar(msg2)
 	    		conexao.enviar(b':server 366 %s #%s :End of /NAMES list.\r\n' % (lista_canal[conexao], canal_temp))
 	    	else:
 	    		conexao.enviar(b':server 403 %s :No such channel\r\n' %canal_temp)				
