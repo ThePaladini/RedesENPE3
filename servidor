@@ -127,7 +127,7 @@ def dados_recebidos(conexao, dados):
 	    			lista_canal[canal_temp].append(lista_escrita[conexao])
 	    		else:
 	    			lista_canal[canal_temp] = [lista_escrita[conexao]]
-	    		for i in range(len(dici_canais[canal])):
+	    		for i in range(len(lista_canal[canal_temp])):
 	    			conect = busca((lista_canal[canal_temp][i]).lower())
 	    			conect.enviar(b':%s JOIN :#%s\r\n' % (lista_escrita[conexao], canal_temp))				
 	    		conexao.enviar(b':server 353 %s = #%s :%s\n' %(lista_escrita[conexao], canal_temp, b' '.join(sorted(lista_canal[canal_temp]))))
